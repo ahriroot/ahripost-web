@@ -248,6 +248,11 @@ delayed-stream@~1.0.0:
   resolved "https://registry.npmmirror.com/delayed-stream/-/delayed-stream-1.0.0.tgz#df3ae199acadfb7d440aaae0b29e2272b24ec619"
   integrity sha512-ZySD7Nf91aLB0RxL4KGrKHBXl7Eds1DAmEdcoVawXnLD7SDhpNgtuII2aAkg7a7QS41jxPSZ17p4VdGnMHk3MQ==
 
+diff-match-patch@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.npmmirror.com/diff-match-patch/-/diff-match-patch-1.0.5.tgz#abb584d5f10cd1196dfc55aa03701592ae3f7b37"
+  integrity sha512-IayShXAgj/QMXgB0IWmKx+rOPuGMhqm5w6jvFxmVenXKIzRqTAAsbBPT3kWQeGANj3jGgvcvv4yK6SxqYmikgw==
+
 esbuild-android-64@0.14.54:
   version "0.14.54"
   resolved "https://registry.npmmirror.com/esbuild-android-64/-/esbuild-android-64-0.14.54.tgz#505f41832884313bbaffb27704b8bcaa2d8616be"
@@ -579,6 +584,13 @@ vdirs@^0.1.4, vdirs@^0.1.8:
   integrity sha512-H9V1zGRLQZg9b+GdMk8MXDN2Lva0zx72MPahDKc30v+DtwKjfyOSXWRIX4t2mhDubM1H09gPhWeth/BJWPHGUw==
   dependencies:
     evtd "^0.2.2"
+
+vditor@^3.8.17:
+  version "3.8.17"
+  resolved "https://registry.npmmirror.com/vditor/-/vditor-3.8.17.tgz#13925dae3c70635bf70f28659915b5c523c00b29"
+  integrity sha512-itaVyNwC/+xjOsTaDZKGy4BGhEcmZWkCDKaMyIH7rcbojw2H29Vg/FV1MNPcNyjZ6mvmcNlS6oZT1drDnAVFMQ==
+  dependencies:
+    diff-match-patch "^1.0.5"
 
 vfonts@^0.0.3:
   version "0.0.3"

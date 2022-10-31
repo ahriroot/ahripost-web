@@ -5,6 +5,7 @@ import useAuthStore from '@/store/auth'
 import { NLayout, NCard, NTabs, NTabPane, NForm, NFormItemRow, NInput, NButton, useMessage } from 'naive-ui'
 import http from '@/net/http'
 import { IResLogin } from '@/types/http/login'
+import Base64 from '@/utils/ab'
 
 
 window.$message = useMessage()
@@ -21,8 +22,14 @@ const handleLogin = async () => {
         username: username.value,
         password: password.value
     })
-    console.log(data.data.token)
     authStore.updateToken(data.data.token)
+    if (route.query.redirect) {
+        let from = Base64.decode(route.query.redirect as string)
+        console.log(from)
+        // router.push({
+        //     path: from
+        // })
+    }
 }
 
 onBeforeMount(async () => {

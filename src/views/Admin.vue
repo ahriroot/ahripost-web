@@ -1,25 +1,14 @@
 <script setup lang="ts">
-import { onBeforeMount, ref } from 'vue'
-import useAuthStore from '@/store/auth'
-import { NConfigProvider, darkTheme } from 'naive-ui'
-
-onBeforeMount(async () => {
-})
-
-const authStore = useAuthStore()
 </script>
 
 <template>
-    <n-config-provider :theme="darkTheme">
-        <div id="index">
-            <!-- {{authStore}} -->
-            <RouterView />
-        </div>
-    </n-config-provider>
+    <div id="admin">
+        <RouterView />
+    </div>
 </template>
 
 <style scoped>
-#index {
+#admin {
     width: 100%;
     height: 100%;
 }
