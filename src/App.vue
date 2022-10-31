@@ -1,21 +1,29 @@
 <script setup lang="ts">
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
-import HelloWorld from './components/HelloWorld.vue'
+import { onBeforeMount, ref } from 'vue'
+import useAuthStore from '@/store/auth'
+import useCommonStore from '@/store/common'
+import { NConfigProvider, NMessageProvider, darkTheme } from 'naive-ui'
+
+
+const authStore = useAuthStore()
+const commonStore = useCommonStore()
+const theme = ref<any>(darkTheme)
+onBeforeMount(async () => {
+    localStorage.setItem('theme', 'dark')
+    await authStore.updateToken(localStorage.getItem('token') || '')
+    await commonStore.setTheme(localStorage.getItem('theme') || 'dark')
+    theme.value = commonStore.theme == 'dark' ? darkTheme : null
+})
 </script>
 
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Hello Vue 3 + TypeScript + Vite" />
+    <n-config-provider :theme="theme">
+        <n-message-provider>
+            <RouterView />
+        </n-message-provider>
+    </n-config-provider>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style scoped>
+
 </style>
