@@ -1,37 +1,27 @@
 <script setup lang="ts">
-import { ref, shallowRef, onMounted } from 'vue'
+import { shallowRef, onMounted } from 'vue'
 import VditorPreview from 'vditor/dist/method.min'
-import 'vditor/dist/index.css'
 
+
+import 'vditor/dist/index.css'
+const props = defineProps<{
+    value: string
+    theme: string
+}>()
 const previewRef = shallowRef<HTMLElement | null>(null);
 
-const md = ref(`
-# Hello World
-
-\`\`\`python
-class Hello:
-    def __init__(self):
-        print('Hello World')
-
-hello = Hello()
-\`\`\`
-
-# Table
-
-|1|2|3|4|
-|-|-|-|-|
-|a|b|c|d|
-
-`);
-
 onMounted(() => {
-    VditorPreview.preview(previewRef.value, md.value, {
-        mode: 'dark',
+    VditorPreview.preview(previewRef.value, props.value, {
+        mode: props.theme,
         hljs: {
-            style: 'dracula'
+            style: 'native'  // monokai
         },
         theme: {
-            current: 'dark'
+            current: props.theme,
+            path: 'https://cdn.jsdelivr.net/npm/vditor@3.8.17/dist/css/content-theme'
+        },
+        markdown: {
+            mark: true,
         }
     })
 })

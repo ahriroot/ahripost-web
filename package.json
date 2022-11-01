@@ -8,7 +8,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vicons/ionicons5": "^0.12.0",
     "axios": "^1.1.3",
+    "iorm": "^0.0.16",
     "nprogress": "^0.2.0",
     "pinia": "^2.0.23",
     "vditor": "^3.8.17",

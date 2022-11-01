@@ -5,6 +5,15 @@
 * {
     padding: 0;
     margin: 0;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.nocopy {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 body {
@@ -21,4 +30,26 @@ body {
 .n-config-provider {
     width: 100vw;
     height: 100vh;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: #555a;
+}
+
+::-webkit-scrollbar-corner {
+    display: none;
+}
+
+pre code {
+    font-size: 16px !important;
 }

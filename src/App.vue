@@ -9,7 +9,7 @@ const authStore = useAuthStore()
 const commonStore = useCommonStore()
 const theme = ref<any>(darkTheme)
 onBeforeMount(async () => {
-    localStorage.setItem('theme', 'dark')
+    localStorage.setItem('theme', 'light')
     await authStore.updateToken(localStorage.getItem('token') || '')
     await commonStore.setTheme(localStorage.getItem('theme') || 'dark')
     theme.value = commonStore.theme == 'dark' ? darkTheme : null

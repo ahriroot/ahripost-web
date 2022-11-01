@@ -7,7 +7,7 @@ import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 
 // 基础设置
-axios.defaults.baseURL = import.meta.env.VITE_BASE_URL_HTTP
+axios.defaults.baseURL = `${import.meta.env.VITE_BASE_URL_HTTP}/browser/api`
 axios.defaults.timeout = 1000000
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'
 

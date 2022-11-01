@@ -16,12 +16,9 @@ const authStore = useAuthStore()
 </script>
 
 <template>
-    <n-config-provider :theme="darkTheme">
-        <div id="index">
-            <!-- {{authStore}} -->
-            <RouterView />
-        </div>
-    </n-config-provider>
+    <div id="index">
+        <router-link to="/admin/project">项目</router-link>
+    </div>
 </template>
 
 <style scoped>
