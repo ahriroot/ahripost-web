@@ -215,7 +215,7 @@ const code = ref('')
 const codeKey = ref(0)
 const handleShowCode = async () => {
     showCodeLoading.value = true
-    let api = apis.value.find((api) => api._id == route.params.api_id)
+    let api = apis.value.find((api) => api.key == route.params.api_id)
     code.value = await renderCode(api)
     codeKey.value = new Date().getTime()
     showCode.value = true

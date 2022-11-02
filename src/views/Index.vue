@@ -1,19 +1,12 @@
 <script setup lang="ts">
-import { onBeforeMount } from 'vue'
 import { useRouter } from 'vue-router'
 import useCommonStore from '@/store/common'
 import { NLayout, NButton, useMessage } from 'naive-ui'
-import http from '@/net/http'
 
 
 window.$message = useMessage()
 const router = useRouter()
 const store = useCommonStore()
-
-onBeforeMount(async () => {
-    // const data = await http.get('/admin/v1/test')
-    // console.log(data)
-})
 
 const handleSetTheme = () => {
     if (store.theme === 'dark') {
