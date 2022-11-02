@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { ref, onBeforeMount, watch } from 'vue'
+import { ref, onBeforeMount, watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {
     NLayout, NLayoutHeader, NLayoutSider, NLayoutFooter,
     NTree, NButton, NIcon, NDropdown, NDrawer, NDrawerContent, NCard, NModal,
-    NInputGroup, NInput,
+    NInputGroup, NInput, NSpin,
     useMessage
 } from 'naive-ui'
-import { ReturnDownBack, CodeWorkingSharp, Checkmark } from '@vicons/ionicons5'
+import { ReturnDownBack, CodeWorkingSharp, Checkmark, ApertureOutline } from '@vicons/ionicons5'
 import RenderVue from '#/Render.vue'
 import http from '@/net/http'
 import useCommonStore from '@/store/common'
@@ -32,12 +32,12 @@ const render = ref<string>('')
 
 const handleExpand = async (keys: string[]) => {
     expandedKeys.value = keys
-    localStorage.setItem(`expandedKeys:${route.params.project_id}`, JSON.stringify(keys))
+    localStorage.setItem(`expandedKeys:${project.value.key}`, JSON.stringify(keys))
 }
 
-watch(() => route.params.api_id, async (_id) => {
-    if (_id) {
-        let api = apis.value.find((api) => api._id == _id)
+watch(() => route.params.api_id, async (key) => {
+    if (key) {
+        let api = apis.value.find((api) => api.key == key)
         render.value = await renderMd(api)
         current_api.value = api
     }
@@ -99,6 +99,7 @@ const nodeProps = ({ option }: { option: any }): any => {
                         key: 'new_api',
                         props: {
                             onClick: async () => {
+                                parent.value = option.value
                                 showNewApiTitle.value = 'New Api'
                                 showNewApi.value = true
                                 showContextmenu.value = false
@@ -130,19 +131,19 @@ const nodeProps = ({ option }: { option: any }): any => {
     }
 }
 
-const array2tree = async (arr: any[], parent: number) => {
+const array2tree = async (arr: any[], parent: string) => {
     let tree: any[] = []
     for (let i = 0; i < arr.length; i++) {
         if (arr[i].parent === parent) {
             if (arr[i].parent === parent) {
                 let node: any = {
-                    key: `api:${arr[i]._id}`,
+                    key: arr[i].key,
                     label: arr[i].label,
-                    value: arr[i].id,
+                    value: arr[i].key,
                     type: arr[i].type,
                 }
                 if (node.type == 'folder') {
-                    node.children = await array2tree(arr, arr[i].id)
+                    node.children = await array2tree(arr, arr[i].key)
                 }
                 tree.push(node)
             }
@@ -152,14 +153,16 @@ const array2tree = async (arr: any[], parent: number) => {
     return tree
 }
 
+const loading = ref(false)
 const handleGetApis = async () => {
+    loading.value = true
     let res = await http.get<any>(`/api/${route.params.project_id}`)
     if (res.code === 40000) {
         router.push({ name: 'AdminProject' })
     } else if (res.code === 10000) {
         apis.value = res.data
         if (route.params.api_id) {
-            let tmp = apis.value.find((api) => api._id == Number(route.params.api_id))
+            let tmp = apis.value.find((api) => api.key == route.params.api_id)
             render.value = await renderMd(tmp)
             tmp && (current_api.value = tmp)
         }
@@ -169,10 +172,11 @@ const handleGetApis = async () => {
     data.value = [{
         key: `project:${project.value._id}`,
         label: project.value.name,
-        value: 0,
+        value: '',
         type: 'project',
-        children: await array2tree(res.data, 0),
+        children: await array2tree(res.data, ''),
     }]
+    loading.value = false
 }
 
 const handleGetProject = async () => {
@@ -192,16 +196,16 @@ const handleBack = async () => {
 }
 
 onBeforeMount(async () => {
-    let keys_str = localStorage.getItem(`expandedKeys:${route.params.project_id}`)
-    if (keys_str) {
-        expandedKeys.value = JSON.parse(keys_str)
-    }
     if (!route.params.project_id) {
         router.push({
             name: 'AdminProject'
         })
     }
     await handleGetProject()
+    let keys_str = localStorage.getItem(`expandedKeys:${project.value.key}`)
+    if (keys_str) {
+        expandedKeys.value = JSON.parse(keys_str)
+    }
 })
 
 const showCode = ref(false)
@@ -221,13 +225,13 @@ const showNewApi = ref(false)
 const showNewApiLoading = ref(false)
 const showNewApiTitle = ref('Api')
 const newApi = ref('')
-const parent = ref(0)
+const parent = ref('')
 const handleSubmitAdd = async () => {
     showNewApiLoading.value = true
     let item: any = {
         id: 0,
         _id: 0,
-        key: '',
+        key: window.crypto.randomUUID(),
         label: newApi.value,
         type: showNewApiTitle.value === 'New Api' ? 'api' : 'folder',
         from: 'browser',
@@ -240,7 +244,7 @@ const handleSubmitAdd = async () => {
         response: null
     }
     if (showNewApiTitle.value === 'New Api') {
-        item.request = {
+        item.request = JSON.stringify({
             describe: '',
             method: 'GET',
             protocol: '',
@@ -260,8 +264,8 @@ const handleSubmitAdd = async () => {
                 form: [],
                 json: `{}`
             }
-        }
-        item.response = {
+        })
+        item.response = JSON.stringify({
             status: '',
             statusText: '',
             headers: [],
@@ -270,18 +274,32 @@ const handleSubmitAdd = async () => {
                 html: [],
                 json: `{}`
             }
-        }
+        })
     }
-    let res = await http.post<any>(`/api/${route.params.project_id}`, item)
-    console.log(res)
+    await http.post<any>(`/api/${route.params.project_id}`, item)
     showNewApiLoading.value = false
+    showNewApi.value = false
+    await handleGetApis()
+}
+
+const showDoc = ref(true)
+const handleSetTheme = () => {
+    if (commonStore.theme === 'dark') {
+        commonStore.setTheme('light')
+    } else {
+        commonStore.setTheme('dark')
+    }
+    showDoc.value = false
+    nextTick(() => {
+        showDoc.value = true
+    })
 }
 </script>
 
 <template>
     <n-drawer v-model:show="showCode" width="80%" style="max-width: 1000px;" placement="right">
         <n-drawer-content title="Request Code">
-            <RenderVue :key="codeKey" :value="code" :theme="commonStore.theme" />
+            <RenderVue v-if="showDoc" :key="codeKey" :value="code" :theme="commonStore.theme" />
         </n-drawer-content>
     </n-drawer>
     <n-modal v-model:show="showNewApi" preset="card" :title="showNewApiTitle" style="width: 600px;">
@@ -310,8 +328,16 @@ const handleSubmitAdd = async () => {
                     <span>{{ project.name }}</span>
                 </div>
                 <div></div>
-                <div v-show="current_api._id > 0">
-                    <n-button quaternary circle @click="handleShowCode" :loading="showCodeLoading">
+                <div>
+                    <n-button quaternary circle @click="handleSetTheme" :loading="showCodeLoading">
+                        <template #icon>
+                            <n-icon>
+                                <ApertureOutline />
+                            </n-icon>
+                        </template>
+                    </n-button>
+                    <n-button v-show="current_api._id > 0" quaternary circle @click="handleShowCode"
+                        :loading="showCodeLoading">
                         <template #icon>
                             <n-icon>
                                 <CodeWorkingSharp />
@@ -326,12 +352,14 @@ const handleSubmitAdd = async () => {
                 <n-dropdown trigger="manual" size="small" placement="bottom-start" :show="showContextmenu"
                     :options="(optionsContextmenu as any)" :x="xPos" :y="yPos"
                     @clickoutside="showContextmenu = false" />
-                <n-tree expand-on-click :data="data" @update:expanded-keys="handleExpand"
-                    :default-expanded-keys="expandedKeys" :node-props="nodeProps" />
+                <n-spin :show="loading">
+                    <n-tree expand-on-click :data="data" @update:expanded-keys="handleExpand"
+                        :default-expanded-keys="expandedKeys" :node-props="nodeProps" />
+                </n-spin>
             </n-layout-sider>
             <n-layout content-style="padding: 24px;" :native-scrollbar="false">
                 <n-card class="detail" size="small">
-                    <RenderVue :key="current_api._id" :value="render" :theme="commonStore.theme" />
+                    <RenderVue v-if="showDoc" :key="current_api._id" :value="render" :theme="commonStore.theme" />
                 </n-card>
             </n-layout>
         </n-layout>

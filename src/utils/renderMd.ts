@@ -105,26 +105,29 @@ const renderMd = async (api: any): Promise<string> => {
     // Response
     md += `#### Response\n\n`
     md += `\`\`\`json\n`
-    md += `// ${response.status} ${response.statusText}\n\n`
-    if (response.headers) {
-        md += `// Headers\n`
-        md += JSON.stringify(response.headers, null, 4)
-        md += `\n\n`
-    }
-    if (response.body.type == "form") {
-        md += `// Body\n`
-        let bs: { [x: string]: string } = {}
-        response.body.form.forEach((form: any) => {
-            bs[form.field] = form.value
+    md += `// ${response.status} ${response.statusText}`
+    if (request.headers.length > 0) {
+        md += `\n\n// Headers\n`
+        let hs: { [x: string]: string } = {}
+        response.headers.forEach((header: any) => {
+            hs[header.field] = header.value
         })
-        md += JSON.stringify(bs, null, 4)
-    } else if (response.body.type == "json") {
-        md += `// Body\n`
+        md += JSON.stringify(hs, null, 4)
+    }
+    if (response.body.type == "pretty") {
+        md += `\n\n// Body\n`
         md += response.body.json
     }
     md += `\n\`\`\`\n\n`
-
-
+    if (response.body.type == "preview") {
+        md += `\`\`\`html\n`
+        md += response.body.html
+        md += `\n\`\`\`\n\n`
+    } else if (response.body.type == "raw") {
+        md += `\`\`\`text\n`
+        md += response.body.text
+        md += `\n\`\`\`\n\n`
+    }
 
     return md
 }

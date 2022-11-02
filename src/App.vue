@@ -7,17 +7,14 @@ import { NConfigProvider, NMessageProvider, darkTheme } from 'naive-ui'
 
 const authStore = useAuthStore()
 const commonStore = useCommonStore()
-const theme = ref<any>(darkTheme)
 onBeforeMount(async () => {
-    localStorage.setItem('theme', 'light')
     await authStore.updateToken(localStorage.getItem('token') || '')
     await commonStore.setTheme(localStorage.getItem('theme') || 'dark')
-    theme.value = commonStore.theme == 'dark' ? darkTheme : null
 })
 </script>
 
 <template>
-    <n-config-provider :theme="theme">
+    <n-config-provider :theme="commonStore.theme == 'dark' ? darkTheme : null">
         <n-message-provider>
             <RouterView />
         </n-message-provider>

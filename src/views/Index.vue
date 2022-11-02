@@ -1,28 +1,38 @@
 <script setup lang="ts">
-import { onBeforeMount, ref } from 'vue'
-import useAuthStore from '@/store/auth'
+import { onBeforeMount } from 'vue'
+import { useRouter } from 'vue-router'
+import useCommonStore from '@/store/common'
+import { NLayout, NButton, useMessage } from 'naive-ui'
 import http from '@/net/http'
-import { NConfigProvider, darkTheme, useMessage } from 'naive-ui'
 
 
 window.$message = useMessage()
+const router = useRouter()
+const store = useCommonStore()
 
 onBeforeMount(async () => {
     // const data = await http.get('/admin/v1/test')
     // console.log(data)
 })
 
-const authStore = useAuthStore()
+const handleSetTheme = () => {
+    if (store.theme === 'dark') {
+        store.setTheme('light')
+    } else {
+        store.setTheme('dark')
+    }
+}
 </script>
 
 <template>
-    <div id="index">
-        <router-link to="/admin/project">项目</router-link>
-    </div>
+    <n-layout class="index" style="height: 100%">
+        <n-button @click="handleSetTheme">{{ store.theme }}</n-button>
+        <n-button @click="router.push({ name: 'AdminProject' })">项目</n-button>
+    </n-layout>
 </template>
 
 <style scoped>
-#index {
+.index {
     width: 100%;
     height: 100%;
 }
