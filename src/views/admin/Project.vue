@@ -78,7 +78,7 @@ const tagTypes = ref(['default', 'success', 'warning', 'error', 'info'])
             <div class="mine">
                 <n-card v-for="i in projects" size="small">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <n-button text @click="router.push({ name: 'AdminApi', params: { project_id: i._id } })">
+                        <n-button text @click="router.push({ name: 'AdminApi', params: { project_id: i.key } })">
                             {{ i.name }}
                         </n-button>
                         <n-button quaternary @click="handleShowSetting(i._id)" :loading="getMembersLoading">

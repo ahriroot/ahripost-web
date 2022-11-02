@@ -26,7 +26,8 @@ const project = ref<any>({
 })
 const apis = ref<any[]>([])
 const current_api = ref<any>({
-    _id: 0
+    _id: 0,
+    key: ''
 })
 const render = ref<string>('')
 
