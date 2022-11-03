@@ -115,7 +115,6 @@ instance.interceptors.response.use(
         if (response.data.code < 10000) {
             clearPending()
             let redirect = Base64.encode(router.currentRoute.value.fullPath)
-            console.log(router.currentRoute)
             router.push({ name: "Login", query: { redirect: redirect } })
             return Promise.reject(response.data.msg)
         }

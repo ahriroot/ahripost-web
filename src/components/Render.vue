@@ -18,11 +18,12 @@ onMounted(() => {
         },
         theme: {
             current: props.theme,
-            path: 'https://cdn.jsdelivr.net/npm/vditor@3.8.17/dist/css/content-theme'
+            path: '/content-theme'
         },
         markdown: {
             mark: true,
-        }
+        },
+        cdn: '/vditor'
     })
 })
 </script>

@@ -16,7 +16,7 @@ import renderCode from '@/utils/renderCode'
 
 
 const commonStore = useCommonStore()
-const message = useMessage()
+window.$message = useMessage()
 const route = useRoute()
 const router = useRouter()
 const data = ref<any>([])
@@ -168,7 +168,7 @@ const handleGetApis = async () => {
             tmp && (current_api.value = tmp)
         }
     } else {
-        message.error(res.data.message)
+        window.$message.error(res.data.message)
     }
     data.value = [{
         key: `project:${project.value._id}`,
@@ -188,7 +188,7 @@ const handleGetProject = async () => {
         project.value = res.data
         await handleGetApis()
     } else {
-        message.error(res.data.message)
+        window.$message.error(res.data.message)
     }
 }
 
@@ -239,12 +239,16 @@ const handleSubmitAdd = async () => {
         project: route.params.project_id,
         parent: parent.value,
         user: 0,
+        tag: false,
+        client: window.crypto.randomUUID(),
         last_sync: 0,
         last_update: new Date().getTime(),
+        template: '',
         request: null,
         response: null
     }
     if (showNewApiTitle.value === 'New Api') {
+        item.template = '{{ title }}\n\n{{ describe }}\n\n{{ detail }}\n\n{{ example }}\n'
         item.request = JSON.stringify({
             describe: '',
             method: 'GET',
@@ -267,13 +271,16 @@ const handleSubmitAdd = async () => {
             }
         })
         item.response = JSON.stringify({
-            status: '',
-            statusText: '',
+            status: 0,
+            statusText: 'None',
             headers: [],
+            tab: 'body',
+            datetime: 0,
             body: {
-                type: 'json',
-                html: [],
-                json: `{}`
+                type: 'raw',
+                html: '',
+                json: `{}`,
+                text: ''
             }
         })
     }
@@ -328,7 +335,6 @@ const handleSetTheme = () => {
                     </n-button>&nbsp;&nbsp;
                     <span>{{ project.name }}</span>
                 </div>
-                <div></div>
                 <div>
                     <n-button quaternary circle @click="handleSetTheme" :loading="showCodeLoading">
                         <template #icon>
@@ -336,7 +342,7 @@ const handleSetTheme = () => {
                                 <ApertureOutline />
                             </n-icon>
                         </template>
-                    </n-button>
+                    </n-button>&nbsp;
                     <n-button v-show="current_api._id > 0" quaternary circle @click="handleShowCode"
                         :loading="showCodeLoading">
                         <template #icon>
