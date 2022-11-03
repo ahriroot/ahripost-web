@@ -380,4 +380,6 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+!/public/vditor/dist
+
 # End of https://www.toptal.com/developers/gitignore/api/linux,windows,macos,visualstudiocode,jetbrains,vim,vuejs,node
