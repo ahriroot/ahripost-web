@@ -24,15 +24,15 @@
 >   - GoTo: https://post.ahriknow.com/admin/token
 >   - Add token And Set it to client 
 
-![1.png](https://installer.service.ahriknow.com/ahripost/rust/release/v0.1.0/resources/1.png)
+![1.png](https://installer.service.ahriknow.com/ahripost/rust/releases/v0.1.0/resources/1.png)
 
 #### 三、创建项目（或下载远程项目）
 
-![2.png](https://installer.service.ahriknow.com/ahripost/rust/release/v0.1.0/resources/2.png)
+![2.png](https://installer.service.ahriknow.com/ahripost/rust/releases/v0.1.0/resources/2.png)
 
 #### 四、 调试接口
 
-![3.png](https://installer.service.ahriknow.com/ahripost/rust/release/v0.1.0/resources/3.png)
+![3.png](https://installer.service.ahriknow.com/ahripost/rust/releases/v0.1.0/resources/3.png)
 
 ## 私有部署
 
