@@ -1,13 +1,16 @@
 const renderCode = async (api: any): Promise<string> => {
-    let request = JSON.parse(api.request);
+    let request = api.request
+    if (typeof request === 'string') {
+        request = JSON.parse(api.request)
+    }
 
     let method = request.method
     let url = request.path
     let search = ''
-    if (request.params.length > 0) {
+    if (request.query.length > 0) {
         search += '?'
-        request.params.forEach((param: any) => {
-            search += `${param.field}=${param.value}&`
+        request.query.forEach((q: any) => {
+            search += `${q.field}=${q.value}&`
         })
         search = search.slice(0, -1)
     }

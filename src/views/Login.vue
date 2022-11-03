@@ -25,9 +25,7 @@ const handleLogin = async () => {
     authStore.updateToken(data.data.token)
     if (route.query.redirect) {
         let from = Base64.decode(route.query.redirect as string)
-        router.push({
-            path: from
-        })
+        router.push(from)
     }
 }
 

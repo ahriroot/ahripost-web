@@ -259,6 +259,8 @@ const handleSubmitAdd = async () => {
             href: '',
             search: '',
             tab: 'param',
+            query_keys: [],
+            query: [],
             params_keys: [],
             params: [],
             headers_keys: [],

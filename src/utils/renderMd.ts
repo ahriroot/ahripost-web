@@ -33,7 +33,7 @@ class Analyze {
             describe: this._describe(),
             path: this._path(),
             header: this._header(),
-            params: this._params(),
+            query: this._query(),
             body: this._body(),
             datetime: this._datetime(),
         }
@@ -49,10 +49,10 @@ class Analyze {
 
     private _path() {
         let search = ''
-        if (this.request.params.length > 0) {
+        if (this.request.query.length > 0) {
             search += '?'
-            this.request.params.forEach((param: any) => {
-                search += `${param.field}=${param.value}&`
+            this.request.query.forEach((q: any) => {
+                search += `${q.field}=${q.value}&`
             })
             search = search.slice(0, -1)
         }
@@ -74,13 +74,13 @@ class Analyze {
         return md
     }
 
-    private _params() {
-        let md = `#### Params\n\n`
-        if (this.request.params.length > 0) {
+    private _query() {
+        let md = `#### Query\n\n`
+        if (this.request.query.length > 0) {
             md += `| Key | Value | Must | Default | Describe |\n`
             md += `| --- | --- | --- | --- | --- |\n`
-            this.request.params.forEach((param: any) => {
-                md += `| ${param.field} | ${param.value} | ${param.must ? 'Yes' : 'No'} | ${param.default} | ${param.describe} |\n`
+            this.request.query.forEach((q: any) => {
+                md += `| ${q.field} | ${q.value} | ${q.must ? 'Yes' : 'No'} | ${q.default} | ${q.describe} |\n`
             })
             md = md.slice(0, -1)
         } else {
@@ -115,10 +115,10 @@ class Analyze {
 
     public getRequest() {
         let search = ''
-        if (this.request.params.length > 0) {
+        if (this.request.query.length > 0) {
             search += '?'
-            this.request.params.forEach((param: any) => {
-                search += `${param.field}=${param.value}&`
+            this.request.query.forEach((q: any) => {
+                search += `${q.field}=${q.value}&`
             })
             search = search.slice(0, -1)
         }
@@ -185,7 +185,7 @@ ${this.part.path}
 
 ${this.part.header}
 
-${this.part.params}
+${this.part.query}
 
 ${this.part.body}
 `

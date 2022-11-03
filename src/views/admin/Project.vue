@@ -1,15 +1,13 @@
 <script setup lang="ts">
 import { ref, onBeforeMount } from 'vue'
 import { useRouter } from 'vue-router'
-import { NLayout, NLayoutHeader, NModal, NCard, NButton, NIcon, NInputGroup, NInput, NDivider, NTag, NSelect, useMessage } from 'naive-ui'
-import { Settings, ReturnDownBack, ApertureOutline } from '@vicons/ionicons5'
+import { NModal, NCard, NButton, NIcon, NInputGroup, NInput, NDivider, NTag, NSelect, useMessage } from 'naive-ui'
+import { Settings } from '@vicons/ionicons5'
 import http from '@/net/http'
-import useCommonStore from '@/store/common'
 
 
 window.$message = useMessage()
 const router = useRouter()
-const commonStore = useCommonStore()
 const projects = ref<any[]>([])
 const projects_by_member = ref<any[]>([])
 
@@ -50,6 +48,10 @@ const member = ref({
 const addMemberLoading = ref(false)
 const handleAddMember = async () => {
     if (current_project_id.value.length <= 0) return
+    if (member.value.username.length <= 0) {
+        window.$message.error('Please input username')
+        return
+    }
     addMemberLoading.value = true
     await http.post<any>(`/member/${current_project_id.value}`, {
         status: member.value.status,
@@ -75,17 +77,6 @@ const handleRemoveMember = async (_id: number) => {
 }
 
 const tagTypes = ref(['default', 'success', 'warning', 'error', 'info'])
-
-const handleBack = async () => {
-    router.push({ name: 'Index' })
-}
-const handleSetTheme = () => {
-    if (commonStore.theme === 'dark') {
-        commonStore.setTheme('light')
-    } else {
-        commonStore.setTheme('dark')
-    }
-}
 </script>
 
 <template>
@@ -108,83 +99,43 @@ const handleSetTheme = () => {
             </n-tag>
         </div>
     </n-modal>
-    <n-layout class="project">
-        <n-layout-header style="height: 64px; padding: 18px" bordered>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div style="display: flex; align-items: center;">
-                    <n-button quaternary circle @click="handleBack">
+    <div class="content">
+        <div class="mine">
+            <n-card style="margin-bottom: 10px" v-for="i in projects" size="small">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <n-button text @click="router.push({ name: 'AdminApi', params: { project_id: i.key } })">
+                        {{ i.name }}
+                    </n-button>
+                    <n-button quaternary @click="handleShowSetting(i.key)" :loading="getMembersLoading">
                         <template #icon>
                             <n-icon>
-                                <ReturnDownBack />
+                                <Settings />
                             </n-icon>
                         </template>
                     </n-button>
                 </div>
-                <div>
-                    <n-button quaternary circle @click="handleSetTheme">
+            </n-card>
+            <n-divider />
+            <n-card style="margin-bottom: 10px" v-for="i in projects_by_member" size="small">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <n-button text @click="router.push({ name: 'AdminApi', params: { project_id: i.key } })">
+                        {{ i.name }}
+                    </n-button>
+                    <n-button quaternary @click="handleShowSetting(i.key, false)" :loading="getMembersLoading">
                         <template #icon>
                             <n-icon>
-                                <ApertureOutline />
+                                <Settings />
                             </n-icon>
                         </template>
                     </n-button>
                 </div>
-            </div>
-        </n-layout-header>
-        <n-layout position="absolute" style="top: 64px; bottom: 64px" has-sider>
-            <n-layout content-style="padding: 24px;" :native-scrollbar="false">
-                <div class="content">
-                    <div class="mine">
-                        <n-card style="margin-bottom: 10px" v-for="i in projects" size="small">
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <n-button text
-                                    @click="router.push({ name: 'AdminApi', params: { project_id: i.key } })">
-                                    {{ i.name }}
-                                </n-button>
-                                <n-button quaternary @click="handleShowSetting(i.key)" :loading="getMembersLoading">
-                                    <template #icon>
-                                        <n-icon>
-                                            <Settings />
-                                        </n-icon>
-                                    </template>
-                                </n-button>
-                            </div>
-                        </n-card>
-                        <n-divider />
-                        <n-card style="margin-bottom: 10px" v-for="i in projects_by_member" size="small">
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <n-button text
-                                    @click="router.push({ name: 'AdminApi', params: { project_id: i.key } })">
-                                    {{ i.name }}
-                                </n-button>
-                                <n-button quaternary @click="handleShowSetting(i.key, false)"
-                                    :loading="getMembersLoading">
-                                    <template #icon>
-                                        <n-icon>
-                                            <Settings />
-                                        </n-icon>
-                                    </template>
-                                </n-button>
-                            </div>
-                        </n-card>
-                    </div>
-                    <div class="partin"></div>
-                </div>
-            </n-layout>
-        </n-layout>
-    </n-layout>
+            </n-card>
+        </div>
+        <div class="partin"></div>
+    </div>
 </template>
 
 <style scoped>
-a {
-    color: #fff;
-}
-
-.project {
-    width: 100%;
-    height: 100%;
-}
-
 .content {
     max-width: 800px;
     margin: 60px auto;
