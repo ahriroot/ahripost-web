@@ -3,11 +3,10 @@ import { ref, onBeforeMount, watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {
     NLayout, NLayoutHeader, NLayoutSider, NLayoutFooter,
-    NTree, NButton, NIcon, NDropdown, NDrawer, NDrawerContent, NCard, NModal,
-    NInputGroup, NInput, NSpin,
+    NTree, NButton, NIcon, NDropdown, NDrawer, NDrawerContent, NCard, NSpin,
     useMessage
 } from 'naive-ui'
-import { ReturnDownBack, CodeWorkingSharp, Checkmark, ApertureOutline } from '@vicons/ionicons5'
+import { ReturnDownBack, CodeWorkingSharp, ApertureOutline } from '@vicons/ionicons5'
 import RenderVue from '#/Render.vue'
 import http from '@/net/http'
 import useCommonStore from '@/store/common'
@@ -65,12 +64,20 @@ const yPos = ref(0)
 const nodeProps = ({ option }: { option: any }): any => {
     return {
         onClick() {
-
+            if (option.type === 'api') {
+                router.push({
+                    name: 'PublicApi',
+                    params: {
+                        ...route.params,
+                        api_id: option.value
+                    }
+                })
+            }
         },
         onDblclick() {
             if (option.type === 'api') {
                 router.push({
-                    name: 'AdminApi',
+                    name: 'PublicApi',
                     params: {
                         ...route.params,
                         api_id: option.value
@@ -81,35 +88,24 @@ const nodeProps = ({ option }: { option: any }): any => {
         onContextmenu(e: MouseEvent): void {
             e.preventDefault()
             e.stopPropagation()
-            if (option.type === 'folder' || option.type === 'project') {
+            if (option.type === 'api') {
                 optionsContextmenu.value = [
                     {
-                        label: '添加文件夹',
-                        key: 'new_folder',
+                        label: '打开',
+                        key: 'open',
                         props: {
                             onClick: async () => {
-                                parent.value = option.value
-                                showNewApiTitle.value = 'New Folder'
-                                showNewApi.value = true
+                                router.push({
+                                    name: 'PublicApi',
+                                    params: {
+                                        ...route.params,
+                                        api_id: option.value
+                                    }
+                                })
                                 showContextmenu.value = false
                             }
                         }
                     },
-                    {
-                        label: '添加接口',
-                        key: 'new_api',
-                        props: {
-                            onClick: async () => {
-                                parent.value = option.value
-                                showNewApiTitle.value = 'New Api'
-                                showNewApi.value = true
-                                showContextmenu.value = false
-                            }
-                        }
-                    }
-                ]
-            } else {
-                optionsContextmenu.value = [
                     {
                         label: '导出',
                         key: 'export',
@@ -124,10 +120,10 @@ const nodeProps = ({ option }: { option: any }): any => {
                         }
                     },
                 ]
+                xPos.value = e.clientX
+                yPos.value = e.clientY
+                showContextmenu.value = true
             }
-            xPos.value = e.clientX
-            yPos.value = e.clientY
-            showContextmenu.value = true
         }
     }
 }
@@ -157,9 +153,9 @@ const array2tree = async (arr: any[], parent: string) => {
 const loading = ref(false)
 const handleGetApis = async () => {
     loading.value = true
-    let res = await http.get<any>(`/api/${route.params.project_id}`)
+    let res = await http.get<any>(`/api/public/${route.params.project_id}`)
     if (res.code === 40000) {
-        router.push({ name: 'AdminProject' })
+        router.push({ name: 'PublicProject' })
     } else if (res.code === 10000) {
         apis.value = res.data
         if (route.params.api_id) {
@@ -181,9 +177,9 @@ const handleGetApis = async () => {
 }
 
 const handleGetProject = async () => {
-    let res = await http.get<any>(`/project/${route.params.project_id}`)
+    let res = await http.get<any>(`/project/public/${route.params.project_id}`)
     if (res.code === 40000) {
-        router.push({ name: 'AdminProject' })
+        router.push({ name: 'PublicProject' })
     } else if (res.code === 10000) {
         project.value = res.data
         await handleGetApis()
@@ -193,13 +189,13 @@ const handleGetProject = async () => {
 }
 
 const handleBack = async () => {
-    router.push({ name: 'AdminProject' })
+    router.push({ name: 'PublicProject' })
 }
 
 onBeforeMount(async () => {
     if (!route.params.project_id) {
         router.push({
-            name: 'AdminProject'
+            name: 'PublicProject'
         })
     }
     await handleGetProject()
@@ -222,76 +218,6 @@ const handleShowCode = async () => {
     showCodeLoading.value = false
 }
 
-const showNewApi = ref(false)
-const showNewApiLoading = ref(false)
-const showNewApiTitle = ref('Api')
-const newApi = ref('')
-const parent = ref('')
-const handleSubmitAdd = async () => {
-    showNewApiLoading.value = true
-    let item: any = {
-        id: 0,
-        _id: 0,
-        key: window.crypto.randomUUID(),
-        label: newApi.value,
-        type: showNewApiTitle.value === 'New Api' ? 'api' : 'folder',
-        from: 'browser',
-        project: route.params.project_id,
-        parent: parent.value,
-        user: 0,
-        tag: false,
-        client: window.crypto.randomUUID(),
-        last_sync: 0,
-        last_update: new Date().getTime(),
-        template: '',
-        request: null,
-        response: null
-    }
-    if (showNewApiTitle.value === 'New Api') {
-        item.template = '{{ title }}\n\n{{ describe }}\n\n{{ detail }}\n\n{{ example }}\n'
-        item.request = JSON.stringify({
-            describe: '',
-            method: 'GET',
-            protocol: '',
-            host: '',
-            port: '',
-            path: '',
-            href: '',
-            search: '',
-            tab: 'param',
-            query_keys: [],
-            query: [],
-            params_keys: [],
-            params: [],
-            headers_keys: [],
-            headers: [],
-            body: {
-                type: 'json',
-                form_keys: [],
-                form: [],
-                json: `{}`
-            }
-        })
-        item.response = JSON.stringify({
-            status: 0,
-            statusText: 'None',
-            headers: [],
-            tab: 'body',
-            datetime: 0,
-            body: {
-                type: 'raw',
-                html: '',
-                json: `{}`,
-                text: ''
-            }
-        })
-    }
-    await http.post<any>(`/api/${route.params.project_id}`, item)
-    showNewApiLoading.value = false
-    showNewApi.value = false
-    await handleGetApis()
-}
-
 const showDoc = ref(true)
 const handleSetTheme = () => {
     if (commonStore.theme === 'dark') {
@@ -312,18 +238,6 @@ const handleSetTheme = () => {
             <RenderVue v-if="showDoc" :key="codeKey" :value="code" :theme="commonStore.theme" />
         </n-drawer-content>
     </n-drawer>
-    <n-modal v-model:show="showNewApi" preset="card" :title="showNewApiTitle" style="width: 600px;">
-        <n-input-group>
-            <n-input v-model:value="newApi" placeholder="Label" :disabled="showNewApiLoading" />
-            <n-button tertiary @click="handleSubmitAdd" :loading="showNewApiLoading">
-                <template #icon>
-                    <n-icon>
-                        <Checkmark />
-                    </n-icon>
-                </template>
-            </n-button>
-        </n-input-group>
-    </n-modal>
     <n-layout style="height: 100%">
         <n-layout-header style="height: 64px; padding: 18px" bordered>
             <div style="display: flex; justify-content: space-between; align-items: center;">

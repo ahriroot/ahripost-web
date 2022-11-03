@@ -1,13 +1,25 @@
 <script setup lang="ts">
+import { ref, onBeforeMount } from 'vue'
 import { useRouter } from 'vue-router'
-import { NLayout, NLayoutHeader, NButton, NIcon, useMessage } from 'naive-ui'
-import { ReturnDownBack, ApertureOutline, PersonCircle, AlbumsSharp, KeySharp } from '@vicons/ionicons5'
+import { NLayout, NLayoutHeader, NCard, NButton, NIcon, useMessage } from 'naive-ui'
+import { ReturnDownBack, ApertureOutline } from '@vicons/ionicons5'
+import http from '@/net/http'
 import useCommonStore from '@/store/common'
 
 
 window.$message = useMessage()
 const router = useRouter()
+const projects = ref<any[]>([])
 const commonStore = useCommonStore()
+
+const handleGetProjects = async () => {
+    let res = await http.get<any>(`/project/public`)
+    projects.value = res.data.projects
+}
+
+onBeforeMount(async () => {
+    await handleGetProjects()
+})
 
 const handleBack = async () => {
     router.push({ name: 'Index' })
@@ -19,14 +31,10 @@ const handleSetTheme = () => {
         commonStore.setTheme('dark')
     }
 }
-
-const handleGoto = (name: string) => {
-    router.push({ name: name })
-}
 </script>
 
 <template>
-    <n-layout id="admin">
+    <n-layout class="public">
         <n-layout-header style="height: 64px; padding: 18px" bordered>
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div style="display: flex; align-items: center;">
@@ -34,29 +42,6 @@ const handleGoto = (name: string) => {
                         <template #icon>
                             <n-icon>
                                 <ReturnDownBack />
-                            </n-icon>
-                        </template>
-                    </n-button>
-                </div>
-                <div style="width: 200px; display: flex; justify-content: space-between; align-items: center;">
-                    <n-button quaternary circle @click="handleGoto('AdminProject')">
-                        <template #icon>
-                            <n-icon>
-                                <AlbumsSharp />
-                            </n-icon>
-                        </template>
-                    </n-button>
-                    <n-button quaternary circle @click="handleGoto('AdminUser')">
-                        <template #icon>
-                            <n-icon>
-                                <PersonCircle />
-                            </n-icon>
-                        </template>
-                    </n-button>
-                    <n-button quaternary circle @click="handleGoto('AdminToken')">
-                        <template #icon>
-                            <n-icon>
-                                <KeySharp />
                             </n-icon>
                         </template>
                     </n-button>
@@ -74,15 +59,34 @@ const handleGoto = (name: string) => {
         </n-layout-header>
         <n-layout position="absolute" style="top: 64px; bottom: 64px" has-sider>
             <n-layout content-style="padding: 24px;" :native-scrollbar="false">
-                <RouterView />
+                <div class="content">
+                    <div class="mine">
+                        <n-card style="margin-bottom: 10px" v-for="i in projects" size="small">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <n-button text
+                                    @click="router.push({ name: 'PublicApi', params: { project_id: i.key } })">
+                                    {{ i.name }}
+                                </n-button>
+                            </div>
+                        </n-card>
+                    </div>
+                    <div class="partin"></div>
+                </div>
             </n-layout>
         </n-layout>
     </n-layout>
 </template>
 
 <style scoped>
-#admin {
+.public {
     width: 100%;
     height: 100%;
+}
+
+.content {
+    max-width: 800px;
+    margin: 60px auto;
+    display: flex;
+    flex-direction: column;
 }
 </style>

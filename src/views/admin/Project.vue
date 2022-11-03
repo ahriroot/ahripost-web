@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onBeforeMount } from 'vue'
 import { useRouter } from 'vue-router'
-import { NModal, NCard, NButton, NIcon, NInputGroup, NInput, NDivider, NTag, NSelect, useMessage } from 'naive-ui'
+import { NModal, NCard, NButton, NIcon, NInputGroup, NInput, NDivider, NTag, NSelect, NSpace, NSwitch, useMessage } from 'naive-ui'
 import { Settings } from '@vicons/ionicons5'
 import http from '@/net/http'
 
@@ -77,11 +77,27 @@ const handleRemoveMember = async (_id: number) => {
 }
 
 const tagTypes = ref(['default', 'success', 'warning', 'error', 'info'])
+
+const publicd = ref(false)
+const publicLoading = ref(false)
+const handlePublicd = async (val: boolean) => {
+    publicLoading.value = true
+    await http.put<any>(`/project/${current_project_id.value}`, {
+        public: val
+    })
+    publicLoading.value = false
+}
 </script>
 
 <template>
     <n-modal v-model:show="showSetting" class="custom-card" preset="card" style="width: 600px" title="Project"
         size="small" :bordered="false">
+        <n-space>
+            <span>Public: </span>
+            <n-switch style="transform: translateY(-2px);" :round="false" v-model:value="publicd" :disabled="!show"
+                :loading="publicLoading" @update:value="handlePublicd" />
+        </n-space>
+        <n-divider />
         <n-input-group v-if="show">
             <n-input placeholder="Member" v-model:value="member.username" />
             <n-select v-model:value="member.status" :options="[

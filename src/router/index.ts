@@ -41,6 +41,16 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("^/admin/Api.vue"),
     },
     {
+        path: "/public",
+        name: "PublicProject",
+        component: () => import("^/public/Project.vue"),
+    },
+    {
+        path: "/public/:project_id/:api_id?",
+        name: "PublicApi",
+        component: () => import("^/public/Api.vue"),
+    },
+    {
         path: "/login",
         name: "Login",
         component: Login,
