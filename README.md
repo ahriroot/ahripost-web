@@ -1,4 +1,4 @@
-## AHRIPOST - 接口调试工具
+## AHRIPOST - 接口调试工具 (0.1.0)
 
 ## 快速开始
 
@@ -60,14 +60,23 @@ docker container run --name ahripost_deploy -p 9000:9000 -v ${}/data:/data -d ah
 ##  POSTGRES_USER: POSTGRES用户 [default: postgres]
 ##  POSTGRES_PASS: POSTGRES密码
 ```
-#### 部署 Web 端
+#### 部署 Web 端 (web 需要从源码部署 或 下载代码编辑配置自行构建镜像)
 
 ```bash
-# 下载镜像
-docker push ahriknow/ahripost-web:0.1.0
+# 克隆源码
+## 国内地址
+git clone https://git.ahriknow.com/ahriknow/ahripost-web.git
+## Github
+git clone https://github.com/ahriroot/ahripost-deploy.git
+
+# 复制并编辑配置文件
+cp .env.example .env
+
+# 构建镜像
+docker build -t ahripost-web:0.1.0 .
 
 # 启动容器 (nginx + vue)
-docker container run --name ahripost_web -p 80:80 -d ahriknow/ahripost-web:0.1.0
+docker container run --name ahripost_web -p 80:80 -d ahripost-web:0.1.0
 ```
 
 ## 源码部署
