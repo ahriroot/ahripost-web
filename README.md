@@ -12,7 +12,7 @@
 
 --------
 
-<a href="https://installer.service.ahriknow.com/ahridbms/rust/releases/v0.1.0/msi/AhriDBMS_0.1.0_x64_zh-CN.msi.sha256" target="_blank">SHA256 File</a>
+<a href="https://installer.service.ahriknow.com/ahripost/rust/releases/v0.1.0/msi/AhriPost_0.1.0_x64_zh-CN.msi.sha256" target="_blank">SHA256 File</a>
 
 
 #### 二、 在线文档和多人同步（可跳过）
@@ -116,3 +116,7 @@ npm run build
 
 ## 部署打包后的 dist/ 文件夹
 ```
+
+### License Apache-2.0
+
+### Copyright (c) 2022-present ahriknow
