@@ -41,11 +41,11 @@
 #### 部署服务器
 
 ```bash
-# pull the image
+# 获取镜像
 docker push ahriknow/ahripost-deploy:0.1.0
 
-# run a container
-docker container run --name ahripost_deploy -p 9000:9000 -v ${}/data:/data -d ahriknow/ahripost-deploy:0.1.0
+# 启动容器
+container run --name ahripost_deploy -p 9000:9000 -v /data:/data -d ahriknow/ahripost-deploy:0.1.0
 # Environments:
 ##  APP_NAME: 应用名
 ##  APP_MODE: 启动模式 => debug|production [default: production]
@@ -60,23 +60,16 @@ docker container run --name ahripost_deploy -p 9000:9000 -v ${}/data:/data -d ah
 ##  POSTGRES_USER: POSTGRES用户 [default: postgres]
 ##  POSTGRES_PASS: POSTGRES密码
 ```
-#### 部署 Web 端 (web 需要从源码部署 或 下载代码编辑配置自行构建镜像)
+#### 部署 Web 端
 
 ```bash
-# 克隆源码
-## 国内地址
-git clone https://git.ahriknow.com/ahriknow/ahripost-web.git
-## Github
-git clone https://github.com/ahriroot/ahripost-deploy.git
-
-# 复制并编辑配置文件
-cp .env.example .env
-
-# 构建镜像
-docker build -t ahripost-web:0.1.0 .
+# 获取镜像
+docker push ahriknow/ahripost-web:0.1.0
 
 # 启动容器 (nginx + vue)
-docker container run --name ahripost_web -p 80:80 -d ahripost-web:0.1.0
+docker container run --name ahripost_web -p 5000:80 -e BASE_URL=http://127.0.0.1:9000 -d ahriknow/ahripost-web:0.1.0
+# Environments:
+##  BASE_URL: 服务端地址 (必须)
 ```
 
 ## 源码部署
@@ -126,6 +119,22 @@ npm run build
 ## 部署打包后的 dist/ 文件夹
 ```
 
-### License Apache-2.0
+###### Feedback ahriknow@ahriknow.com
 
-### Copyright (c) 2022-present ahriknow
+###### License Apache-2.0
+
+###### Copyright (c) 2022-present ahriknow
+
+## Git Repository
+
+#### Server
+
+[Gitea](https://git.ahriknow.com/ahriknow/ahripost-deploy) | [Github](https://github.com/ahriroot/ahripost-deploy)
+
+#### Web
+
+[Gitea](https://git.ahriknow.com/ahriknow/ahripost-web) | [Github](https://github.com/ahriroot/ahripost-web)
+
+#### Client
+
+[Gitea](https://git.ahriknow.com/ahriknow/ahripost-client-rust) | [Github](https://github.com/ahriroot/ahripost-client-rust)

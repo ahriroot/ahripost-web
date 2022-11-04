@@ -2,4 +2,5 @@
 
 interface Window {
     $message: any
+    $apiUrl: string
 }

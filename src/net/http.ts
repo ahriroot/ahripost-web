@@ -6,10 +6,6 @@ import Base64 from '@/utils/ab'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 
-// 基础设置
-axios.defaults.baseURL = `${import.meta.env.VITE_BASE_URL_HTTP}/browser/api`
-axios.defaults.timeout = 1000000
-axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'
 
 const startLoading = async () => {
     const commonStore = useCommonStore()
@@ -49,7 +45,7 @@ interface PendingType {
 }
 
 const instance = axios.create({
-    timeout: 1000000,
+    timeout: 10000,
     responseType: 'json',
 })
 
@@ -156,6 +152,7 @@ const http: Http = {
     get(url, params) {
         return new Promise((resolve, reject) => {
             startLoading()
+            instance.defaults.baseURL = `${window.$apiUrl}/browser/api`
             instance
                 .get(url, { params })
                 .then(res => {
@@ -181,6 +178,7 @@ const http: Http = {
                     instance.defaults.headers.post[key] = headers[key]
                 }
             }
+            instance.defaults.baseURL = `${window.$apiUrl}/browser/api`
             instance
                 .post(url, params)
                 .then(res => {
@@ -201,6 +199,7 @@ const http: Http = {
     put(url, params) {
         return new Promise((resolve, reject) => {
             startLoading()
+            instance.defaults.baseURL = `${window.$apiUrl}/browser/api`
             instance
                 .put(url, params)
                 .then(res => {
@@ -220,6 +219,7 @@ const http: Http = {
     delete(url, params) {
         return new Promise((resolve, reject) => {
             startLoading()
+            instance.defaults.baseURL = `${window.$apiUrl}/browser/api`
             instance
                 .delete(url, { params })
                 .then(res => {

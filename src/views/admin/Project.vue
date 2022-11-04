@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import { ref, onBeforeMount } from 'vue'
 import { useRouter } from 'vue-router'
-import { NModal, NCard, NButton, NIcon, NInputGroup, NInput, NDivider, NTag, NSelect, NSpace, NSwitch, useMessage } from 'naive-ui'
-import { Settings } from '@vicons/ionicons5'
+import {
+    NModal, NCard, NButton, NIcon, NInputGroup, NInput, NDivider,
+    NForm, NFormItem,
+    NTag, NSelect, NSpace, NSwitch, useMessage
+} from 'naive-ui'
+import { Settings, Add } from '@vicons/ionicons5'
 import http from '@/net/http'
 
 
@@ -87,9 +91,49 @@ const handlePublicd = async (val: boolean) => {
     })
     publicLoading.value = false
 }
+
+const showNew = ref(false)
+const newProject = ref({
+    name: '',
+    public: false,
+})
+const handleShowNew = () => {
+    showNew.value = true
+}
+const handleSubmitNew = async () => {
+    if (newProject.value.name.length <= 0) {
+        window.$message.error('Please input project name')
+        return
+    }
+    await http.post<any>(`/project`, {
+        name: newProject.value.name,
+        public: newProject.value.public,
+    })
+    await handleGetProjects()
+    showNew.value = false
+}
 </script>
 
 <template>
+    <n-modal v-model:show="showNew" class="custom-card" preset="card" style="width: 600px" title="Project" size="small"
+        :bordered="false">
+        <n-form ref="formRef" :model="newProject" label-placement="left" label-width="auto"
+            require-mark-placement="right-hanging" size="small" :style="{
+                maxWidth: '640px'
+            }">
+            <n-form-item label="Name" path="name">
+                <n-input v-model:value="newProject.name" placeholder="Name" />
+            </n-form-item>
+            <n-form-item label="Public" path="public">
+                <n-switch :round="false" v-model:value="newProject.public" />
+            </n-form-item>
+        </n-form>
+        <div style="display: flex; justify-content: flex-end">
+            <n-button round type="primary" @click="handleSubmitNew">
+                验证
+            </n-button>
+        </div>
+    </n-modal>
     <n-modal v-model:show="showSetting" class="custom-card" preset="card" style="width: 600px" title="Project"
         size="small" :bordered="false">
         <n-space>
@@ -117,6 +161,15 @@ const handlePublicd = async (val: boolean) => {
     </n-modal>
     <div class="content">
         <div class="mine">
+            <div style="display: flex; justify-content: flex-end;">
+                <n-button @click="handleShowNew" style="margin-bottom: 10px;">
+                    <template #icon>
+                        <n-icon>
+                            <Add />
+                        </n-icon>
+                    </template>
+                </n-button>
+            </div>
             <n-card style="margin-bottom: 10px" v-for="i in projects" size="small">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <n-button text @click="router.push({ name: 'AdminApi', params: { project_id: i.key } })">
