@@ -213,6 +213,10 @@ ${this.getResponse()}
                 return this.getDetail()
             case 'example':
                 return this.getExample()
+            case 'request':
+                return this.getRequest()
+            case 'response':
+                return this.getResponse()
             default:
                 return this.part[name] || ''
         }
