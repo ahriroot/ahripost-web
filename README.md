@@ -1,4 +1,4 @@
-## AHRIPOST - 接口调试工具 (0.2.0)
+## AHRIPOST - 接口调试工具 (0.1.0)
 
 ## Next Version
 
@@ -11,15 +11,15 @@
 
 #### 一、 下载客户端
 
-<a href="https://installer.service.ahriknow.com/ahripost/rust/releases/v0.2.0/msi/AhriPost_0.2.0_x64_zh-CN.msi" target="_blank">AhriPost_0.2.0_x64_zh-CN.msi</a>
+<a href="https://installer.service.ahriknow.com/ahripost/rust/releases/v0.1.0/msi/AhriPost_0.1.0_x64_zh-CN.msi" target="_blank">AhriPost_0.1.0_x64_zh-CN.msi</a>
 
 -------
 
-<a href="https://installer.service.ahriknow.com/ahripost/rust/releases/v0.2.0/msi/AhriPost_0.2.0_x64_zh-CN.msi.zip" target="_blank">AhriPost_0.2.0_x64_zh-CN.msi.zip</a>
+<a href="https://installer.service.ahriknow.com/ahripost/rust/releases/v0.1.0/msi/AhriPost_0.1.0_x64_zh-CN.msi.zip" target="_blank">AhriPost_0.1.0_x64_zh-CN.msi.zip</a>
 
 --------
 
-<a href="https://installer.service.ahriknow.com/ahripost/rust/releases/v0.2.0/msi/AhriPost_0.2.0_x64_zh-CN.msi.sha256" target="_blank">SHA256 File</a>
+<a href="https://installer.service.ahriknow.com/ahripost/rust/releases/v0.1.0/msi/AhriPost_0.1.0_x64_zh-CN.msi.sha256" target="_blank">SHA256 File</a>
 
 
 #### 二、 在线文档和多人同步（可跳过）
@@ -31,15 +31,15 @@
 >   - GoTo: https://post.ahriknow.com/admin/token
 >   - Add token And Set it to client 
 
-![1.png](https://installer.service.ahriknow.com/ahripost/rust/releases/v0.2.0/resources/1.png)
+![1.png](https://installer.service.ahriknow.com/ahripost/rust/1.png)
 
 #### 三、创建项目（或下载远程项目）
 
-![2.png](https://installer.service.ahriknow.com/ahripost/rust/releases/v0.2.0/resources/2.png)
+![2.png](https://installer.service.ahriknow.com/ahripost/rust/2.png)
 
 #### 四、 调试接口
 
-![3.png](https://installer.service.ahriknow.com/ahripost/rust/releases/v0.2.0/resources/3.png)
+![3.png](https://installer.service.ahriknow.com/ahripost/rust/3.png)
 
 ## 私有部署
 
@@ -49,10 +49,10 @@
 
 ```bash
 # 获取镜像
-docker pull ahriknow/ahripost-deploy:0.2.0
+docker pull ahriknow/ahripost-deploy:0.1.0
 
 # 启动容器
-container run --name ahripost_deploy -p 9000:9000 -v /data:/data -d ahriknow/ahripost-deploy:0.2.0
+container run --name ahripost_deploy -p 9000:9000 -v /data:/data -d ahriknow/ahripost-deploy:0.1.0
 # Volume
 ## /data sqlite 数据库文件目录 / 归档文件目录
 # Environments:
@@ -73,10 +73,10 @@ container run --name ahripost_deploy -p 9000:9000 -v /data:/data -d ahriknow/ahr
 
 ```bash
 # 获取镜像
-docker pull ahriknow/ahripost-web:0.2.0
+docker pull ahriknow/ahripost-web:0.1.0
 
 # 启动容器 (nginx + vue)
-docker container run --name ahripost_web -p 5000:80 -e BASE_URL=http://127.0.0.1:9000 -d ahriknow/ahripost-web:0.2.0
+docker container run --name ahripost_web -p 5000:80 -e BASE_URL=http://127.0.0.1:9000 -d ahriknow/ahripost-web:0.1.0
 # Environments:
 ##  BASE_URL: 服务端地址 (必须)
 ```
