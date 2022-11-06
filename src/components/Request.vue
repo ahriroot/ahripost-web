@@ -897,7 +897,7 @@ const handleChangeType = (_: string) => {
                             </n-radio-group>
                             <div v-show="data.response.body.type == 'pretty'"
                                 style="position: absolute; top: 30px; left: 0; bottom: 0; right: 0">
-                                <Editor ref="responseRef" @change="(val) => data.response.body.json = val"
+                                <Editor ref="responseRef" @change="(val: string) => data.response.body.json = val"
                                     :value="data.response.body.json" />
                             </div>
                             <div v-show="data.response.body.type == 'raw'"
