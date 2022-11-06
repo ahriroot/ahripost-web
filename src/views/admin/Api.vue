@@ -7,16 +7,17 @@ import {
     NInputGroup, NInput, NSpin,
     useMessage
 } from 'naive-ui'
-import { ReturnDownBack, CodeWorkingSharp, Checkmark, ApertureOutline } from '@vicons/ionicons5'
+import { ReturnDownBack, CodeWorkingSharp, Checkmark, Send, ApertureOutline } from '@vicons/ionicons5'
 import RenderVue from '#/Render.vue'
+import RequestVue from '#/Request.vue'
 import http from '@/net/http'
 import useCommonStore from '@/store/common'
 import renderMd from '@/utils/renderMd'
 import renderCode from '@/utils/renderCode'
 
 
-const commonStore = useCommonStore()
 window.$message = useMessage()
+const commonStore = useCommonStore()
 const route = useRoute()
 const router = useRouter()
 const data = ref<any>([])
@@ -304,12 +305,35 @@ const handleSetTheme = () => {
         showDoc.value = true
     })
 }
+
+const showRequest = ref(false)
+const loadingRequest = ref(false)
+const timeout = ref(600)
+const handleShowRequest = async () => {
+    loadingRequest.value = true
+    setTimeout(() => {
+        showRequest.value = true
+        timeout.value = 10
+    }, 600);
+}
+const handleCloseRequest = () => {
+    loadingRequest.value = false
+    showRequest.value = false
+}
 </script>
 
 <template>
     <n-drawer v-model:show="showCode" width="80%" style="max-width: 1000px;" placement="right">
         <n-drawer-content title="Request Code">
-            <RenderVue v-if="showDoc" :key="codeKey" :value="code" :theme="commonStore.theme" />
+            <div style="padding: 10px 20px">
+                <RenderVue v-if="showDoc" :key="codeKey" :value="code" :theme="commonStore.theme" />
+            </div>
+        </n-drawer-content>
+    </n-drawer>
+    <n-drawer v-model:show="showRequest" @after-leave="handleCloseRequest" width="80%"
+        style="max-width: 1000px;" placement="right">
+        <n-drawer-content title="Request Code">
+            <RequestVue :api="current_api" :project="route.params.project_id" />
         </n-drawer-content>
     </n-drawer>
     <n-modal v-model:show="showNewApi" preset="card" :title="showNewApiTitle" style="width: 600px;">
@@ -342,6 +366,14 @@ const handleSetTheme = () => {
                         <template #icon>
                             <n-icon>
                                 <ApertureOutline />
+                            </n-icon>
+                        </template>
+                    </n-button>&nbsp;
+                    <n-button v-show="current_api._id > 0" quaternary circle @click="handleShowRequest"
+                        :loading="loadingRequest">
+                        <template #icon>
+                            <n-icon>
+                                <Send />
                             </n-icon>
                         </template>
                     </n-button>&nbsp;
@@ -388,5 +420,12 @@ const handleSetTheme = () => {
 .detail {
     max-width: 1000px;
     margin: 0 auto;
+}
+
+:deep(.n-drawer-body-content-wrapper) {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    padding: 0 !important;
 }
 </style>

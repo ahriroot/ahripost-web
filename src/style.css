@@ -53,3 +53,29 @@ body {
 pre code {
     font-size: 16px !important;
 }
+
+.n-tabs {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.n-tab-pane {
+    padding: 0 !important;
+    position: absolute !important;
+    top: 33px !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+}
+
+.response .n-spin-container,
+.response .n-spin-container .n-spin-content {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+}
