@@ -1,11 +1,14 @@
 ## AHRIPOST - 接口调试工具 (0.1.0)
 
-## Next Version
+## Version in development
 
-- 环境变量
-- 启动屏幕
-- Vscode 扩展
 - 优化
+- 启动屏幕
+- 环境变量
+- Vscode 扩展
+- Websocket
+- Request Process
+- ?RPC
 
 ## 快速开始
 

@@ -130,7 +130,7 @@ const handleSubmitNew = async () => {
         </n-form>
         <div style="display: flex; justify-content: flex-end">
             <n-button round type="primary" @click="handleSubmitNew">
-                验证
+                确定
             </n-button>
         </div>
     </n-modal>

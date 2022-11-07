@@ -56,9 +56,9 @@ const routes: Array<RouteRecordRaw> = [
         component: Login,
     },
     {
-        path: "/login",
-        name: "Login",
-        component: () => import("@/views/Login.vue"), // 懒加载组件
+        path: "/release",
+        name: "Release",
+        component: () => import("@/views/Release.vue"),
     },
 ]
 

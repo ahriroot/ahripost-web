@@ -2,7 +2,7 @@
 import { ref, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import useCommonStore from '@/store/common'
-import { ApertureOutline, AlbumsSharp, AlbumsOutline } from '@vicons/ionicons5'
+import { ApertureOutline, AlbumsSharp, AlbumsOutline, CloudDownload } from '@vicons/ionicons5'
 import { NLayout, NButton, NIcon, useMessage } from 'naive-ui'
 import RenderVue from '@/components/Render.vue'
 import md from '../../README.md?raw'
@@ -34,6 +34,13 @@ const handleSetTheme = () => {
                 <template #icon>
                     <n-icon>
                         <ApertureOutline />
+                    </n-icon>
+                </template>
+            </n-button>
+            <n-button quaternary circle title="主题" @click="router.push({ name: 'Release' })">
+                <template #icon>
+                    <n-icon>
+                        <CloudDownload />
                     </n-icon>
                 </template>
             </n-button>
