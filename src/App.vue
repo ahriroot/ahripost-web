@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { onBeforeMount, ref } from 'vue'
+import { onBeforeMount } from 'vue'
 import useAuthStore from '@/store/auth'
 import useCommonStore from '@/store/common'
-import { NConfigProvider, NMessageProvider, darkTheme } from 'naive-ui'
+import { NConfigProvider, NMessageProvider, NNotificationProvider, darkTheme } from 'naive-ui'
 import axios from 'axios'
 
 
@@ -23,7 +23,9 @@ onBeforeMount(async () => {
 <template>
     <n-config-provider :theme="commonStore.theme == 'dark' ? darkTheme : null">
         <n-message-provider>
-            <RouterView />
+            <n-notification-provider>
+                <RouterView />
+            </n-notification-provider>
         </n-message-provider>
     </n-config-provider>
 </template>

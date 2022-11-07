@@ -5,7 +5,7 @@ import {
     NSelect, NTabs, NTabPane, NDataTable, SelectOption, DataTableColumns,
     NRadioGroup, NSpace, NRadio, NUpload, NPopover, NDivider
 } from 'naive-ui'
-import { Add, Remove, Send, CloudUpload, CodeWorkingSharp } from '@vicons/ionicons5'
+import { Add, Remove, Send } from '@vicons/ionicons5'
 import axios from 'axios'
 import AInput from './AInput.vue'
 import ACheckbox from './ACheckbox.vue'
@@ -14,7 +14,7 @@ import Editor from './Editor.vue'
 
 const props = defineProps<{
     api: any
-    project: string
+    project: any
 }>()
 
 const data = ref<any>(null)
@@ -75,8 +75,7 @@ const handleSend = async () => {
     showLoading.value = true
 
     let envs: any[] = []
-    let es: any = { environs: [] } //await Environ.where({ name: env.value }).get()
-    envs = es.environs.map((item: any) => {
+    envs = JSON.parse(props.project.environs).environs.map((item: any) => {
         return {
             key: item.key,
             value: item.value
@@ -290,9 +289,10 @@ const handleEnvChange = async () => {
     })
 }
 const handleChangeEnv = async (env: string) => {
-    localStorage.setItem(`environ:${props.project}`, env)
+    localStorage.setItem(`environ:${props.project._id}`, env)
 }
 
+// region 项目
 const columns = ref<DataTableColumns<any>>([
     {
         type: 'selection',
@@ -476,7 +476,6 @@ const columns = ref<DataTableColumns<any>>([
         }
     }
 ])
-
 const columnsForm = ref<DataTableColumns<any>>([
     {
         type: 'selection',
@@ -755,6 +754,7 @@ const columnsResponseHeaders = ref<DataTableColumns<any>>([
         }
     }
 ])
+// endregion
 
 const formatDatetime = (time: number) => {
     if (time) {

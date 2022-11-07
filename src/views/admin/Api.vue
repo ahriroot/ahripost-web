@@ -325,15 +325,15 @@ const handleCloseRequest = () => {
 <template>
     <n-drawer v-model:show="showCode" width="80%" style="max-width: 1000px;" placement="right">
         <n-drawer-content title="Request Code">
-            <div style="padding: 10px 20px">
+            <div style="padding: 10px 20px 80px 20px">
                 <RenderVue v-if="showDoc" :key="codeKey" :value="code" :theme="commonStore.theme" />
             </div>
         </n-drawer-content>
     </n-drawer>
-    <n-drawer v-model:show="showRequest" @after-leave="handleCloseRequest" width="80%"
-        style="max-width: 1000px;" placement="right">
-        <n-drawer-content title="Request Code">
-            <RequestVue :api="current_api" :project="route.params.project_id" />
+    <n-drawer v-model:show="showRequest" @after-leave="handleCloseRequest" width="80%" style="max-width: 1000px;"
+        placement="right">
+        <n-drawer-content title="Request">
+            <RequestVue :api="current_api" :project="project" />
         </n-drawer-content>
     </n-drawer>
     <n-modal v-model:show="showNewApi" preset="card" :title="showNewApiTitle" style="width: 600px;">
